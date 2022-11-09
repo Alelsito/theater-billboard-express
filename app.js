@@ -9,6 +9,7 @@ const playRouter = require('./src/routes/plays')
 const posterRouter = require('./src/routes/posters')
 const directorRouter = require('./src/routes/directors')
 const producerRouter = require('./src/routes/producers')
+const scriptWriterRouter = require('./src/routes/script_writers')
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use('/api/v1/play', playRouter)
 app.use('/api/v1/poster', posterRouter)
 app.use('/api/v1/director', directorRouter)
 app.use('/api/v1/producer', producerRouter)
+app.use('/api/v1/scriptwriter', scriptWriterRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
