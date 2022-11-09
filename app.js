@@ -14,6 +14,7 @@ const actorRouter = require('./src/routes/actors')
 const genreRouter = require('./src/routes/genres')
 const classificationRouter = require('./src/routes/classifications')
 const classificationDetailRouter = require('./src/routes/classification_details')
+const showRouter = require('./src/routes/shows')
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use('/api/v1/actor', actorRouter)
 app.use('/api/v1/genre', genreRouter)
 app.use('/api/v1/classification', classificationRouter)
 app.use('/api/v1/classificationdetail', classificationDetailRouter)
+app.use('/api/v1/show', showRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
