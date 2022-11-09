@@ -5,46 +5,46 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 router.get('/', async (req, res, next) => {
-  const plays = await prisma.play.findMany()
-  res.send({ data: plays })
+  const posters = await prisma.play_poster.findMany()
+  res.send({ data: posters })
 })
 
 router.get('/:id', async (req, res, next) => {
-  const play = await prisma.play.findUnique({
+  const poster = await prisma.play_poster.findUnique({
     where: {
       id: parseInt(req.params.id)
     }
   })
-  res.send({ data: play })
+  res.send({ data: poster })
 })
 
 router.post('/', async (req, res, next) => {
-  const newPlay = await prisma.play.create({ // INSERT
+  const newPoster = await prisma.play_poster.create({ // INSERT
     data: req.body
   })
 
-  res.status(201).json(newPlay)
+  res.status(201).json(newPoster)
 })
 
 router.patch('/:id', async (req, res, next) => {
-  const updatePlay = await prisma.play.update({
+  const updatePoster = await prisma.play_poster.update({
     where: {
       id: parseInt(req.params.id)
     },
     data: req.body
   })
 
-  res.status(200).json(updatePlay)
+  res.status(200).json(updatePoster)
 })
 
 router.delete('/:id', async (req, res, next) => {
-  const deletePlay = await prisma.play.delete({
+  const deletePoster = await prisma.play_poster.delete({
     where: {
       id: parseInt(req.params.id)
     }
   })
 
-  res.status(200).json(deletePlay)
+  res.status(200).json(deletePoster)
 })
 
 module.exports = router
