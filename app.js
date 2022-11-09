@@ -8,6 +8,7 @@ const indexRouter = require('./src/routes/index')
 const playRouter = require('./src/routes/plays')
 const posterRouter = require('./src/routes/posters')
 const directorRouter = require('./src/routes/directors')
+const producerRouter = require('./src/routes/producers')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use('/api/v1/', indexRouter)
 app.use('/api/v1/play', playRouter)
 app.use('/api/v1/poster', posterRouter)
 app.use('/api/v1/director', directorRouter)
+app.use('/api/v1/producer', producerRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
