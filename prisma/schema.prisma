@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model actor {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(255)
+  play_actor play_actor[]
+}
+
+model classification {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+  play play[]
+}
+
+model classification_detail {
+  id      Int    @id @default(autoincrement())
+  details String @db.VarChar(255)
+  play    play[]
+}
+
+model country {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(255)
+  theatre theatre[]
+}
+
+model director {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  play_director play_director[]
+}
+
+model genre {
+  id         Int          @id(map: "gender_pkey") @default(autoincrement())
+  name       String       @db.VarChar(255)
+  play_genre play_genre[]
+}
+
+model order {
+  id             Int         @id @default(autoincrement())
+  show_id        Int
+  show_ticket_id Int
+  quantity       Int
+  show           show        @relation(fields: [show_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  show_ticket    show_ticket @relation(fields: [show_ticket_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play {
+  id                       Int                    @id @default(autoincrement())
+  name                     String                 @db.VarChar(255)
+  description              String
+  synopsis                 String?
+  classification_id        Int
+  classification_detail_id Int?
+  duration                 String                 @db.VarChar(255)
+  classification_detail    classification_detail? @relation(fields: [classification_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  classification           classification         @relation(fields: [classification_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  play_actor               play_actor[]
+  play_director            play_director[]
+  play_genre               play_genre[]
+  play_poster              play_poster[]
+  play_producer            play_producer[]
+  play_script_writer       play_script_writer[]
+  show                     show[]
+}
+
+model play_actor {
+  id             Int     @id @default(autoincrement())
+  play_id        Int
+  actor_id       Int
+  character_name String? @db.VarChar(255)
+  actor          actor   @relation(fields: [actor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  play           play    @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play_director {
+  id          Int      @id @default(autoincrement())
+  play_id     Int
+  director_id Int
+  director    director @relation(fields: [director_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  play        play     @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play_genre {
+  id       Int   @id @default(autoincrement())
+  play_id  Int
+  genre_id Int
+  genre    genre @relation(fields: [genre_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  play     play  @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play_poster {
+  id      Int    @id @default(autoincrement())
+  play_id Int
+  url     String
+  play    play   @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play_producer {
+  id          Int      @id @default(autoincrement())
+  play_id     Int
+  producer_id Int
+  play        play     @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  producer    producer @relation(fields: [producer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model play_script_writer {
+  id               Int           @id @default(autoincrement())
+  play_id          Int
+  script_writer_id Int
+  play             play          @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  script_writer    script_writer @relation(fields: [script_writer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model producer {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  play_producer play_producer[]
+}
+
+model script_writer {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(255)
+  play_script_writer play_script_writer[]
+}
+
+model show {
+  id          Int           @id @default(autoincrement())
+  play_id     Int
+  theatre_id  Int
+  date        DateTime      @db.Date
+  time        String        @db.VarChar(255)
+  active      Boolean
+  play        play          @relation(fields: [play_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  theatre     theatre       @relation(fields: [theatre_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order       order[]
+  show_ticket show_ticket[]
+}
+
+model show_ticket {
+  id             Int         @id @default(autoincrement())
+  show_id        Int
+  ticket_type_id Int
+  price          Float
+  stock          Int
+  show           show        @relation(fields: [show_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ticket_type    ticket_type @relation(fields: [ticket_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order          order[]
+}
+
+model theatre {
+  id               Int     @id @default(autoincrement())
+  name             String  @db.VarChar(255)
+  description      String?
+  country_id       Int
+  address          String
+  capacity         String? @db.VarChar(255)
+  box_office_hours String?
+  architect        String?
+  phone_number     Int?
+  contact_email    String? @db.VarChar(255)
+  services         String?
+  social_networks  String?
+  country          country @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  show             show[]
+}
+
+model ticket_type {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  show_ticket show_ticket[]
+}
