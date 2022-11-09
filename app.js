@@ -6,7 +6,8 @@ const logger = require('morgan')
 
 const indexRouter = require('./src/routes/index')
 const playRouter = require('./src/routes/plays')
-const playPoster = require('./src/routes/posters')
+const posterRouter = require('./src/routes/posters')
+const directorRouter = require('./src/routes/directors')
 
 const app = express()
 
@@ -18,7 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/api/v1/', indexRouter)
 app.use('/api/v1/play', playRouter)
-app.use('/api/v1/poster', playPoster)
+app.use('/api/v1/poster', posterRouter)
+app.use('/api/v1/director', directorRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
