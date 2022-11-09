@@ -15,6 +15,7 @@ const genreRouter = require('./src/routes/genres')
 const classificationRouter = require('./src/routes/classifications')
 const classificationDetailRouter = require('./src/routes/classification_details')
 const showRouter = require('./src/routes/shows')
+const countryRouter = require('./src/routes/countries')
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.use('/api/v1/genre', genreRouter)
 app.use('/api/v1/classification', classificationRouter)
 app.use('/api/v1/classificationdetail', classificationDetailRouter)
 app.use('/api/v1/show', showRouter)
+app.use('/api/v1/country', countryRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
