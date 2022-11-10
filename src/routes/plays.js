@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
   res.send({ data: plays })
 })
 
-// Get specific play (by :id)
+// Get specific play
 router.get('/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
@@ -31,7 +31,7 @@ router.post('/', async (req, res, next) => {
   res.status(201).json(newPlay)
 })
 
-// Update data of specific play (by :id)
+// Update data of specific play
 router.patch('/:id', async (req, res, next) => {
   const updatePlay = await prisma.play.update({
     where: {
@@ -43,7 +43,7 @@ router.patch('/:id', async (req, res, next) => {
   res.status(200).json(updatePlay)
 })
 
-// Delete play (by :id)
+// Delete play
 router.delete('/:id', async (req, res, next) => {
   const deletePlay = await prisma.play.delete({
     where: {
@@ -56,7 +56,85 @@ router.delete('/:id', async (req, res, next) => {
 
 // SPECIFIC REQUESTS *************
 
-// GET All ----------------
+// PLAY_POSTER ----------------
+
+// Get all posters of specific play
+router.get('/:id/poster', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    },
+    include: {
+      play_poster: true
+    }
+  })
+
+  res.send({ data: { play } })
+})
+
+// PLAY_GENRE ----------------
+
+// Get all genres of specific play
+router.get('/:id/genre', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  const genres = await prisma.play_genre.findMany({
+    where: {
+      play_id: parseInt(req.params.id)
+    },
+    select: {
+      genre: true
+    }
+  })
+
+  play.genres = genres
+
+  res.send({ data: { play } })
+})
+
+// Get specific play_genre
+router.get('/:playId/genre/:genreId', async (req, res, next) => {
+  const playGenre = await prisma.play_genre.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    }
+  })
+
+  res.status(200).json(playGenre)
+})
+
+// Insert into play_genre
+router.post('/:playId/genre/:genreId', async (req, res, next) => {
+  const newPlayGenre = await prisma.play_genre.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    }
+  })
+
+  res.status(201).json(newPlayGenre)
+})
+
+// Update play_genre
+router.patch('/:playId/genre/:genreId', async (req, res, next) => {
+  const updatePlayGenre = await prisma.play_genre.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    },
+    data: req.body
+  })
+
+  res.status(201).json(updatePlayGenre)
+})
+
+// PLAY_DIRECTOR ----------------
+
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
   const play = await prisma.play.findUnique({
@@ -78,6 +156,45 @@ router.get('/:id/director', async (req, res, next) => {
 
   res.send({ data: { play } })
 })
+
+// Get specific play_director
+router.get('/:playId/director/:directorId', async (req, res, next) => {
+  const playDirector = await prisma.play_director.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(200).json(playDirector)
+})
+
+// Insert into play_director
+router.post('/:playId/director/:directorId', async (req, res, next) => {
+  const newPlayDirector = await prisma.play_director.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(201).json(newPlayDirector)
+})
+
+// Update play_director
+router.patch('/:playId/director/:directorId', async (req, res, next) => {
+  const updatePlayDirector = await prisma.play_director.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayDirector)
+})
+
+// PLAY_PRODUCER ----------------
 
 // Get all producers of specific play
 router.get('/:id/producer', async (req, res, next) => {
@@ -101,6 +218,45 @@ router.get('/:id/producer', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
+// Get specific play_producer
+router.get('/:playId/producer/:producerId', async (req, res, next) => {
+  const playProducer = await prisma.play_producer.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    }
+  })
+
+  res.status(200).json(playProducer)
+})
+
+// Insert into play_producer
+router.post('/:playId/producer/:producerId', async (req, res, next) => {
+  const newPlayProducer = await prisma.play_producer.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    }
+  })
+
+  res.status(201).json(newPlayProducer)
+})
+
+// Update play_producer
+router.patch('/:playId/producer/:producerId', async (req, res, next) => {
+  const updatePlayProducer = await prisma.play_producer.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayProducer)
+})
+
+// PLAY_SCRIPT_WRITER ----------------
+
 // Get all scriptWriters of specific play
 router.get('/:id/scriptwriter', async (req, res, next) => {
   const play = await prisma.play.findUnique({
@@ -122,6 +278,45 @@ router.get('/:id/scriptwriter', async (req, res, next) => {
 
   res.send({ data: { play } })
 })
+
+// Get specific play_script_writer
+router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const playScriptWriter = await prisma.play_script_writer.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    }
+  })
+
+  res.status(200).json(playScriptWriter)
+})
+
+// Insert into play_script_writer
+router.post('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const newPlayScriptWriter = await prisma.play_script_writer.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    }
+  })
+
+  res.status(201).json(newPlayScriptWriter)
+})
+
+// Update play_script_writer
+router.patch('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const updatePlayScriptWriter = await prisma.play_script_writer.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayScriptWriter)
+})
+
+// PLAY_ACTOR ----------------
 
 // Get all actors of specific play
 function exclude (actor, ...keys) {
@@ -157,79 +352,6 @@ router.get('/:id/actor', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
-// Get all posters of specific play
-router.get('/:id/poster', async (req, res, next) => {
-  const play = await prisma.play.findUnique({
-    where: {
-      id: parseInt(req.params.id)
-    },
-    include: {
-      play_poster: true
-    }
-  })
-
-  res.send({ data: { play } })
-})
-
-// Get all genres of specific play
-router.get('/:id/genre', async (req, res, next) => {
-  const play = await prisma.play.findUnique({
-    where: {
-      id: parseInt(req.params.id)
-    }
-  })
-
-  const genres = await prisma.play_genre.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
-    },
-    select: {
-      genre: true
-    }
-  })
-
-  play.genres = genres
-
-  res.send({ data: { play } })
-})
-
-// GET Specific ----------------
-// Get specific play_director
-router.get('/:playId/director/:directorId', async (req, res, next) => {
-  const playDirector = await prisma.play_director.findFirst({
-    where: {
-      play_id: parseInt(req.params.playId),
-      director_id: parseInt(req.params.directorId)
-    }
-  })
-
-  res.status(200).json(playDirector)
-})
-
-// Get specific play_producer
-router.get('/:playId/producer/:producerId', async (req, res, next) => {
-  const playProducer = await prisma.play_producer.findFirst({
-    where: {
-      play_id: parseInt(req.params.playId),
-      producer_id: parseInt(req.params.producerId)
-    }
-  })
-
-  res.status(200).json(playProducer)
-})
-
-// Get specific play_script_writer
-router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
-  const playScriptWriter = await prisma.play_script_writer.findFirst({
-    where: {
-      play_id: parseInt(req.params.playId),
-      script_writer_id: parseInt(req.params.scriptwriterId)
-    }
-  })
-
-  res.status(200).json(playScriptWriter)
-})
-
 // Get specific play_actor
 router.get('/:playId/actor/:actorId', async (req, res, next) => {
   const playActor = await prisma.play_actor.findFirst({
@@ -240,55 +362,6 @@ router.get('/:playId/actor/:actorId', async (req, res, next) => {
   })
 
   res.status(200).json(playActor)
-})
-
-// Get specific play_genre
-router.get('/:playId/genre/:genreId', async (req, res, next) => {
-  const playGenre = await prisma.play_genre.findFirst({
-    where: {
-      play_id: parseInt(req.params.playId),
-      genre_id: parseInt(req.params.genreId)
-    }
-  })
-
-  res.status(200).json(playGenre)
-})
-
-// POST  ----------------
-// Insert into play_director
-router.post('/:playId/director/:directorId', async (req, res, next) => {
-  const newPlayDirector = await prisma.play_director.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      director_id: parseInt(req.params.directorId)
-    }
-  })
-
-  res.status(201).json(newPlayDirector)
-})
-
-// Insert into play_producer
-router.post('/:playId/producer/:producerId', async (req, res, next) => {
-  const newPlayProducer = await prisma.play_producer.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      producer_id: parseInt(req.params.producerId)
-    }
-  })
-
-  res.status(201).json(newPlayProducer)
-})
-
-// Insert into play_script_writer
-router.post('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
-  const newPlayScriptWriter = await prisma.play_script_writer.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      script_writer_id: parseInt(req.params.scriptwriterId)
-    }
-  })
-
-  res.status(201).json(newPlayScriptWriter)
 })
 
 // Insert into play_actor
@@ -304,58 +377,6 @@ router.post('/:playId/actor/:actorId', async (req, res, next) => {
   res.status(201).json(newPlayActor)
 })
 
-// Insert into play_genre
-router.post('/:playId/genre/:genreId', async (req, res, next) => {
-  const newPlayGenre = await prisma.play_genre.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      genre_id: parseInt(req.params.genreId)
-    }
-  })
-
-  res.status(201).json(newPlayGenre)
-})
-
-// PATCH  ----------------
-// Update play_director
-router.patch('/:playId/director/:directorId', async (req, res, next) => {
-  const updatePlayDirector = await prisma.play_director.updateMany({
-    where: {
-      play_id: parseInt(req.params.playId),
-      director_id: parseInt(req.params.directorId)
-    },
-    data: req.body
-  })
-
-  res.status(200).json(updatePlayDirector)
-})
-
-// Update play_producer
-router.patch('/:playId/producer/:producerId', async (req, res, next) => {
-  const updatePlayProducer = await prisma.play_producer.updateMany({
-    where: {
-      play_id: parseInt(req.params.playId),
-      producer_id: parseInt(req.params.producerId)
-    },
-    data: req.body
-  })
-
-  res.status(200).json(updatePlayProducer)
-})
-
-// Update play_script_writer
-router.patch('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
-  const updatePlayScriptWriter = await prisma.play_script_writer.updateMany({
-    where: {
-      play_id: parseInt(req.params.playId),
-      script_writer_id: parseInt(req.params.scriptwriterId)
-    },
-    data: req.body
-  })
-
-  res.status(200).json(updatePlayScriptWriter)
-})
-
 // Update play_actor
 router.patch('/:playId/actor/:actorId', async (req, res, next) => {
   const updatePlayActor = await prisma.play_actor.updateMany({
@@ -367,19 +388,6 @@ router.patch('/:playId/actor/:actorId', async (req, res, next) => {
   })
 
   res.status(200).json(updatePlayActor)
-})
-
-// Update play_genre
-router.patch('/:playId/genre/:genreId', async (req, res, next) => {
-  const updatePlayGenre = await prisma.play_genre.updateMany({
-    where: {
-      play_id: parseInt(req.params.playId),
-      genre_id: parseInt(req.params.genreId)
-    },
-    data: req.body
-  })
-
-  res.status(201).json(updatePlayGenre)
 })
 
 module.exports = router
