@@ -18,6 +18,7 @@ const showRouter = require('./src/routes/shows')
 const countryRouter = require('./src/routes/countries')
 const theatreRouter = require('./src/routes/theatres')
 const ticketTypeRouter = require('./src/routes/ticket_types')
+const orderRouter = require('./src/routes/orders')
 
 const app = express()
 
@@ -41,6 +42,7 @@ app.use('/api/v1/show', showRouter)
 app.use('/api/v1/country', countryRouter)
 app.use('/api/v1/theatre', theatreRouter)
 app.use('/api/v1/tickettype', ticketTypeRouter)
+app.use('/api/v1/order', orderRouter)
 
 app.use('*', (req, res, next) =>
   res.status(404).send({ message: 'Not found' })
