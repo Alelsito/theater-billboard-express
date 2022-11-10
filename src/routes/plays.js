@@ -196,14 +196,14 @@ router.get('/:id/genre', async (req, res, next) => {
 // GET Specific ----------------
 // Get specific play_director
 router.get('/:playId/director/:directorId', async (req, res, next) => {
-  const updatePlayDirector = await prisma.play_director.findFirst({
+  const playDirector = await prisma.play_director.findFirst({
     where: {
       play_id: parseInt(req.params.playId),
       director_id: parseInt(req.params.directorId)
     }
   })
 
-  res.status(200).json(updatePlayDirector)
+  res.status(200).json(playDirector)
 })
 
 // POST  ----------------
@@ -280,6 +280,19 @@ router.patch('/:playId/director/:directorId', async (req, res, next) => {
   })
 
   res.status(200).json(updatePlayDirector)
+})
+
+// Update play_producer
+router.patch('/:playId/producer/:producerId', async (req, res, next) => {
+  const updatePlayProducer = await prisma.play_producer.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayProducer)
 })
 
 module.exports = router
