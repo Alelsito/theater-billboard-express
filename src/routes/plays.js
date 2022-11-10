@@ -133,6 +133,18 @@ router.patch('/:playId/genre/:genreId', async (req, res, next) => {
   res.status(201).json(updatePlayGenre)
 })
 
+// Delete specific play_genre
+router.delete('/:playId/genre/:genreId', async (req, res, next) => {
+  const deletePlayGenre = await prisma.play_genre.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    }
+  })
+
+  res.status(200).json(deletePlayGenre)
+})
+
 // PLAY_CLASSIFICATION & PLAY_CLASSIFICATION_DETAIL ----------------
 
 // Get classification and classification_detail of specific play
