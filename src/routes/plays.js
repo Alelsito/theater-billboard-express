@@ -102,10 +102,13 @@ router.get('/:playId/genre/:genreId', async (req, res, next) => {
     where: {
       play_id: parseInt(req.params.playId),
       genre_id: parseInt(req.params.genreId)
+    },
+    include: {
+      genre: true
     }
   })
 
-  res.status(200).json(playGenre)
+  res.send({ data: { playGenre } })
 })
 
 // Insert into play_genre
@@ -192,10 +195,13 @@ router.get('/:playId/director/:directorId', async (req, res, next) => {
     where: {
       play_id: parseInt(req.params.playId),
       director_id: parseInt(req.params.directorId)
+    },
+    include: {
+      director: true
     }
   })
 
-  res.status(200).json(playDirector)
+  res.send({ data: { playDirector } })
 })
 
 // Insert into play_director
@@ -265,10 +271,13 @@ router.get('/:playId/producer/:producerId', async (req, res, next) => {
     where: {
       play_id: parseInt(req.params.playId),
       producer_id: parseInt(req.params.producerId)
+    },
+    include: {
+      producer: true
     }
   })
 
-  res.status(200).json(playProducer)
+  res.send({ data: { playProducer } })
 })
 
 // Insert into play_producer
@@ -338,10 +347,13 @@ router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
     where: {
       play_id: parseInt(req.params.playId),
       script_writer_id: parseInt(req.params.scriptwriterId)
+    },
+    include: {
+      script_writer: true
     }
   })
 
-  res.status(200).json(playScriptWriter)
+  res.send({ data: { playScriptWriter } })
 })
 
 // Insert into play_script_writer
@@ -423,10 +435,13 @@ router.get('/:playId/actor/:actorId', async (req, res, next) => {
     where: {
       play_id: parseInt(req.params.playId),
       actor_id: parseInt(req.params.actorId)
+    },
+    include: {
+      actor: true
     }
   })
 
-  res.status(200).json(playActor)
+  res.send({ data: { playActor } })
 })
 
 // Insert into play_actor
