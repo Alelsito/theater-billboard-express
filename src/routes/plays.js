@@ -141,6 +141,28 @@ router.get('/:id/director', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
+// Get all producers of specific play
+router.get('/:id/producer', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  const producers = await prisma.play_producer.findMany({
+    where: {
+      play_id: parseInt(req.params.id)
+    },
+    select: {
+      producer: true
+    }
+  })
+
+  play.producers = producers
+
+  res.send({ data: { play } })
+})
+
 // Get all posters of specific play
 router.get('/:id/poster', async (req, res, next) => {
   const play = await prisma.play.findUnique({
