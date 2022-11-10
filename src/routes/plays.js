@@ -56,6 +56,7 @@ router.delete('/:id', async (req, res, next) => {
 
 // SPECIFIC REQUESTS
 
+// POST
 // Insert into play_director
 router.post('/:playId/director/:directorId', async (req, res, next) => {
   const newPlayDirector = await prisma.play_director.create({
@@ -117,6 +118,7 @@ router.post('/:playId/genre/:genreId', async (req, res, next) => {
   res.status(201).json(newPlayGenre)
 })
 
+// GET ALL
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
   const play = await prisma.play.findUnique({
@@ -139,22 +141,16 @@ router.get('/:id/director', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
-// Refactor ♻
 // Get all posters of specific play
 router.get('/:id/poster', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
+    },
+    include: {
+      play_poster: true
     }
   })
-
-  const posters = await prisma.play_poster.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
-    }
-  })
-
-  play.posters = posters
 
   res.send({ data: { play } })
 })
