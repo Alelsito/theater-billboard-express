@@ -4,6 +4,8 @@ const router = express.Router()
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
+// CRUD
+
 // Get all plays
 router.get('/', async (req, res, next) => {
   const plays = await prisma.play.findMany()
@@ -52,6 +54,31 @@ router.delete('/:id', async (req, res, next) => {
   res.status(200).json(deletePlay)
 })
 
+// SPECIFIC REQUESTS
+
+// Get all directors of specific play
+router.get('/:id/director', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  const directors = await prisma.play_director.findMany({
+    where: {
+      play_id: parseInt(req.params.id)
+    },
+    select: {
+      director: true
+    }
+  })
+
+  play.directors = directors
+
+  res.send({ data: { play } })
+})
+
+// Refactor ♻
 // Get all posters of specific play
 router.get('/:id/poster', async (req, res, next) => {
   const play = await prisma.play.findUnique({
