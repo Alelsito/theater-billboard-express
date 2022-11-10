@@ -455,4 +455,16 @@ router.patch('/:playId/actor/:actorId', async (req, res, next) => {
   res.status(200).json(updatePlayActor)
 })
 
+// Delete specific play_actor
+router.delete('/:playId/actor/:actorId', async (req, res, next) => {
+  const deletePlayActor = await prisma.play_actor.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      actor_id: parseInt(req.params.actorId)
+    }
+  })
+
+  res.status(200).json(deletePlayActor)
+})
+
 module.exports = router
