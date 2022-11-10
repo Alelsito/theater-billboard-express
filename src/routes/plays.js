@@ -185,6 +185,41 @@ router.get('/:id/scriptwriter', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
+// Get all actors of specific play
+
+function exclude (actor, ...keys) {
+  for (const key of keys) {
+    delete actor[key]
+  }
+  return actor
+}
+
+router.get('/:id/actor', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  const actors = await prisma.play_actor.findMany({
+    where: {
+      play_id: parseInt(req.params.id)
+    },
+    include: {
+      actor: true
+    }
+  })
+
+  const actorsDataClean = actors.map(a => {
+    exclude(a, 'id', 'play_id', 'actor_id')
+    return a
+  })
+
+  play.actors = actorsDataClean
+
+  res.send({ data: { play } })
+})
+
 // Get all posters of specific play
 router.get('/:id/poster', async (req, res, next) => {
   const play = await prisma.play.findUnique({
