@@ -133,6 +133,23 @@ router.patch('/:playId/genre/:genreId', async (req, res, next) => {
   res.status(201).json(updatePlayGenre)
 })
 
+// PLAY_CLASSIFICATION & PLAY_CLASSIFICATION_DETAIL ----------------
+
+// Get classification and classification_detail of specific play
+router.get('/:id/classification', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    },
+    include: {
+      classification: true,
+      classification_detail: true
+    }
+  })
+
+  res.send({ data: { play } })
+})
+
 // PLAY_DIRECTOR ----------------
 
 // Get all directors of specific play
