@@ -307,4 +307,17 @@ router.patch('/:playId/producer/:producerId', async (req, res, next) => {
   res.status(200).json(updatePlayProducer)
 })
 
+// // Update play_script_writer
+router.patch('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const updatePlayScriptWriter = await prisma.play_script_writer.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayScriptWriter)
+})
+
 module.exports = router
