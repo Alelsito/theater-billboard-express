@@ -68,9 +68,9 @@ router.post('/:playId/director/:directorId', async (req, res, next) => {
   res.status(201).json(newPlayDirector)
 })
 
-// Insert into plat_producer
+// Insert into play_producer
 router.post('/:playId/producer/:producerId', async (req, res, next) => {
-  const newPlayProducer = await prisma.play_director.create({
+  const newPlayProducer = await prisma.play_producer.create({
     data: {
       play_id: parseInt(req.params.playId),
       producer_id: parseInt(req.params.producerId)
