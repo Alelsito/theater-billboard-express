@@ -223,6 +223,18 @@ router.patch('/:playId/director/:directorId', async (req, res, next) => {
   res.status(200).json(updatePlayDirector)
 })
 
+// Delete specific play_director
+router.delete('/:playId/director/:directorId', async (req, res, next) => {
+  const deletePlayDirector = await prisma.play_director.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(200).json(deletePlayDirector)
+})
+
 // PLAY_PRODUCER ----------------
 
 // Get all producers of specific play
