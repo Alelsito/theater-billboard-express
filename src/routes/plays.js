@@ -72,6 +72,25 @@ router.get('/:id/poster', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
+// Get specific poster of specific play
+router.get('/:playId/poster/:posterId', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.playId)
+    }
+  })
+
+  const poster = await prisma.play_poster.findUnique({
+    where: {
+      id: parseInt(req.params.posterId)
+    }
+  })
+
+  play.poster = poster
+
+  res.send({ data: { play } })
+})
+
 // PLAY_GENRE ----------------
 
 // Get all genres of specific play
