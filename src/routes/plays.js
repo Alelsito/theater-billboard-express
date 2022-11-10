@@ -163,6 +163,28 @@ router.get('/:id/producer', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
+// Get all scriptWriters of specific play
+router.get('/:id/scriptwriter', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  const scriptWriters = await prisma.play_script_writer.findMany({
+    where: {
+      play_id: parseInt(req.params.id)
+    },
+    select: {
+      script_writer: true
+    }
+  })
+
+  play.scriptWriters = scriptWriters
+
+  res.send({ data: { play } })
+})
+
 // Get all posters of specific play
 router.get('/:id/poster', async (req, res, next) => {
   const play = await prisma.play.findUnique({
