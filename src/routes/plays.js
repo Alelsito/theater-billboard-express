@@ -208,26 +208,26 @@ router.get('/:playId/director/:directorId', async (req, res, next) => {
 
 // Get specific play_producer
 router.get('/:playId/producer/:producerId', async (req, res, next) => {
-  const updatePlayProducer = await prisma.play_producer.findFirst({
+  const playProducer = await prisma.play_producer.findFirst({
     where: {
       play_id: parseInt(req.params.playId),
       producer_id: parseInt(req.params.producerId)
     }
   })
 
-  res.status(200).json(updatePlayProducer)
+  res.status(200).json(playProducer)
 })
 
 // Get specific play_script_writer
 router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
-  const updatePlayScriptWriter = await prisma.play_script_writer.findFirst({
+  const playScriptWriter = await prisma.play_script_writer.findFirst({
     where: {
       play_id: parseInt(req.params.playId),
       script_writer_id: parseInt(req.params.scriptwriterId)
     }
   })
 
-  res.status(200).json(updatePlayScriptWriter)
+  res.status(200).json(playScriptWriter)
 })
 
 // POST  ----------------
@@ -319,7 +319,7 @@ router.patch('/:playId/producer/:producerId', async (req, res, next) => {
   res.status(200).json(updatePlayProducer)
 })
 
-// // Update play_script_writer
+// Update play_script_writer
 router.patch('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
   const updatePlayScriptWriter = await prisma.play_script_writer.updateMany({
     where: {
@@ -330,6 +330,19 @@ router.patch('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => 
   })
 
   res.status(200).json(updatePlayScriptWriter)
+})
+
+// Update play_actor
+router.patch('/:playId/actor/:actorId', async (req, res, next) => {
+  const updatePlayActor = await prisma.play_actor.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      actor_id: parseInt(req.params.actorId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayActor)
 })
 
 module.exports = router
