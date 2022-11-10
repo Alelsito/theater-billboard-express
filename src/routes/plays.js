@@ -105,6 +105,18 @@ router.post('/:playId/actor/:actorId', async (req, res, next) => {
   res.status(201).json(newPlayActor)
 })
 
+// Insert into play_genre
+router.post('/:playId/genre/:genreId', async (req, res, next) => {
+  const newPlayGenre = await prisma.play_genre.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    }
+  })
+
+  res.status(201).json(newPlayGenre)
+})
+
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
   const play = await prisma.play.findUnique({
