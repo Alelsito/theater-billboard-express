@@ -56,68 +56,6 @@ router.delete('/:id', async (req, res, next) => {
 
 // SPECIFIC REQUESTS
 
-// POST
-// Insert into play_director
-router.post('/:playId/director/:directorId', async (req, res, next) => {
-  const newPlayDirector = await prisma.play_director.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      director_id: parseInt(req.params.directorId)
-    }
-  })
-
-  res.status(201).json(newPlayDirector)
-})
-
-// Insert into play_producer
-router.post('/:playId/producer/:producerId', async (req, res, next) => {
-  const newPlayProducer = await prisma.play_producer.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      producer_id: parseInt(req.params.producerId)
-    }
-  })
-
-  res.status(201).json(newPlayProducer)
-})
-
-// Insert into play_script_writer
-router.post('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
-  const newPlayScriptWriter = await prisma.play_script_writer.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      script_writer_id: parseInt(req.params.scriptwriterId)
-    }
-  })
-
-  res.status(201).json(newPlayScriptWriter)
-})
-
-// Insert into play_actor
-router.post('/:playId/actor/:actorId', async (req, res, next) => {
-  const newPlayActor = await prisma.play_actor.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      actor_id: parseInt(req.params.actorId),
-      character_name: req.body.character_name
-    }
-  })
-
-  res.status(201).json(newPlayActor)
-})
-
-// Insert into play_genre
-router.post('/:playId/genre/:genreId', async (req, res, next) => {
-  const newPlayGenre = await prisma.play_genre.create({
-    data: {
-      play_id: parseInt(req.params.playId),
-      genre_id: parseInt(req.params.genreId)
-    }
-  })
-
-  res.status(201).json(newPlayGenre)
-})
-
 // GET ALL
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
@@ -186,7 +124,6 @@ router.get('/:id/scriptwriter', async (req, res, next) => {
 })
 
 // Get all actors of specific play
-
 function exclude (actor, ...keys) {
   for (const key of keys) {
     delete actor[key]
@@ -254,6 +191,82 @@ router.get('/:id/genre', async (req, res, next) => {
   play.genres = genres
 
   res.send({ data: { play } })
+})
+
+// POST
+// Insert into play_director
+router.post('/:playId/director/:directorId', async (req, res, next) => {
+  const newPlayDirector = await prisma.play_director.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(201).json(newPlayDirector)
+})
+
+// Insert into play_producer
+router.post('/:playId/producer/:producerId', async (req, res, next) => {
+  const newPlayProducer = await prisma.play_producer.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    }
+  })
+
+  res.status(201).json(newPlayProducer)
+})
+
+// Insert into play_script_writer
+router.post('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const newPlayScriptWriter = await prisma.play_script_writer.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    }
+  })
+
+  res.status(201).json(newPlayScriptWriter)
+})
+
+// Insert into play_actor
+router.post('/:playId/actor/:actorId', async (req, res, next) => {
+  const newPlayActor = await prisma.play_actor.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      actor_id: parseInt(req.params.actorId),
+      character_name: req.body.character_name
+    }
+  })
+
+  res.status(201).json(newPlayActor)
+})
+
+// Insert into play_genre
+router.post('/:playId/genre/:genreId', async (req, res, next) => {
+  const newPlayGenre = await prisma.play_genre.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      genre_id: parseInt(req.params.genreId)
+    }
+  })
+
+  res.status(201).json(newPlayGenre)
+})
+
+// PATCH
+
+router.patch('/:playId/director/:directorId', async (req, res, next) => {
+  const updatePlayDirector = await prisma.play_director.updateMany({
+    where: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    },
+    data: req.body
+  })
+
+  res.status(200).json(updatePlayDirector)
 })
 
 module.exports = router
