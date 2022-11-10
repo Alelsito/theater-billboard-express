@@ -56,6 +56,18 @@ router.delete('/:id', async (req, res, next) => {
 
 // SPECIFIC REQUESTS
 
+// Insert into play_director
+router.post('/:playId/director/:directorId', async (req, res, next) => {
+  const newPlay = await prisma.play_director.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(201).json(newPlay)
+})
+
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
   const play = await prisma.play.findUnique({
