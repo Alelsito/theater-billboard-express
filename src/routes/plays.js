@@ -218,6 +218,18 @@ router.get('/:playId/producer/:producerId', async (req, res, next) => {
   res.status(200).json(updatePlayProducer)
 })
 
+// Get specific play_script_writer
+router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
+  const updatePlayScriptWriter = await prisma.play_script_writer.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      script_writer_id: parseInt(req.params.scriptwriterId)
+    }
+  })
+
+  res.status(200).json(updatePlayScriptWriter)
+})
+
 // POST  ----------------
 // Insert into play_director
 router.post('/:playId/director/:directorId', async (req, res, next) => {
