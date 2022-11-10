@@ -58,14 +58,26 @@ router.delete('/:id', async (req, res, next) => {
 
 // Insert into play_director
 router.post('/:playId/director/:directorId', async (req, res, next) => {
-  const newPlay = await prisma.play_director.create({
+  const newPlayDirector = await prisma.play_director.create({
     data: {
       play_id: parseInt(req.params.playId),
       director_id: parseInt(req.params.directorId)
     }
   })
 
-  res.status(201).json(newPlay)
+  res.status(201).json(newPlayDirector)
+})
+
+// Insert into plat_producer
+router.post('/:playId/producer/:producerId', async (req, res, next) => {
+  const newPlayProducer = await prisma.play_director.create({
+    data: {
+      play_id: parseInt(req.params.playId),
+      producer_id: parseInt(req.params.producerId)
+    }
+  })
+
+  res.status(201).json(newPlayProducer)
 })
 
 // Get all directors of specific play
