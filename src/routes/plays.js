@@ -4,7 +4,7 @@ const router = express.Router()
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-// CRUD
+// CRUD *************
 
 // Get all plays
 router.get('/', async (req, res, next) => {
@@ -54,9 +54,9 @@ router.delete('/:id', async (req, res, next) => {
   res.status(200).json(deletePlay)
 })
 
-// SPECIFIC REQUESTS
+// SPECIFIC REQUESTS *************
 
-// GET ALL
+// GET All ----------------
 // Get all directors of specific play
 router.get('/:id/director', async (req, res, next) => {
   const play = await prisma.play.findUnique({
@@ -193,7 +193,20 @@ router.get('/:id/genre', async (req, res, next) => {
   res.send({ data: { play } })
 })
 
-// POST
+// GET Specific ----------------
+// Get specific play_director
+router.get('/:playId/director/:directorId', async (req, res, next) => {
+  const updatePlayDirector = await prisma.play_director.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      director_id: parseInt(req.params.directorId)
+    }
+  })
+
+  res.status(200).json(updatePlayDirector)
+})
+
+// POST  ----------------
 // Insert into play_director
 router.post('/:playId/director/:directorId', async (req, res, next) => {
   const newPlayDirector = await prisma.play_director.create({
@@ -255,8 +268,8 @@ router.post('/:playId/genre/:genreId', async (req, res, next) => {
   res.status(201).json(newPlayGenre)
 })
 
-// PATCH
-
+// PATCH  ----------------
+// Update play_director
 router.patch('/:playId/director/:directorId', async (req, res, next) => {
   const updatePlayDirector = await prisma.play_director.updateMany({
     where: {
