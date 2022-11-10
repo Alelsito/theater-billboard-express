@@ -230,6 +230,18 @@ router.get('/:playId/scriptwriter/:scriptwriterId', async (req, res, next) => {
   res.status(200).json(playScriptWriter)
 })
 
+// Get specific play_actor
+router.get('/:playId/actor/:actorId', async (req, res, next) => {
+  const playActor = await prisma.play_actor.findFirst({
+    where: {
+      play_id: parseInt(req.params.playId),
+      actor_id: parseInt(req.params.actorId)
+    }
+  })
+
+  res.status(200).json(playActor)
+})
+
 // POST  ----------------
 // Insert into play_director
 router.post('/:playId/director/:directorId', async (req, res, next) => {
