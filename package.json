@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "sync-env": "npx sync-dotenv"
+    "sync-env": "npx sync-dotenv",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@prisma/client": "^4.6.0",
@@ -19,7 +20,8 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "prisma": "^4.6.0",
-    "standard": "^17.0.0"
+    "standard": "^17.0.0",
+    "husky": "^8.0.0"
   },
   "eslintConfig": {
     "extends": [
