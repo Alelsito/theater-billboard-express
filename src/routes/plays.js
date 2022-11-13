@@ -56,41 +56,6 @@ router.delete('/:id', async (req, res, next) => {
 
 // SPECIFIC REQUESTS *************
 
-// PLAY_POSTER ----------------
-
-// Get all posters of specific play
-router.get('/:id/poster', async (req, res, next) => {
-  const play = await prisma.play.findUnique({
-    where: {
-      id: parseInt(req.params.id)
-    },
-    include: {
-      play_poster: true
-    }
-  })
-
-  res.send({ data: { play } })
-})
-
-// Get specific poster of specific play
-router.get('/:playId/poster/:posterId', async (req, res, next) => {
-  const play = await prisma.play.findUnique({
-    where: {
-      id: parseInt(req.params.playId)
-    }
-  })
-
-  const poster = await prisma.play_poster.findUnique({
-    where: {
-      id: parseInt(req.params.posterId)
-    }
-  })
-
-  play.poster = poster
-
-  res.send({ data: { play } })
-})
-
 // PLAY_CLASSIFICATION & PLAY_CLASSIFICATION_DETAIL ----------------
 
 // Get classification and classification_detail of specific play
