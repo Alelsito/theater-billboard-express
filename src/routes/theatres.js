@@ -4,11 +4,15 @@ const router = express.Router()
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
+// CRUD *************
+
+// Get all theatres
 router.get('/', async (req, res, next) => {
   const theatres = await prisma.theatre.findMany()
   res.send({ data: theatres })
 })
 
+// Get specific theatre
 router.get('/:id', async (req, res, next) => {
   const theatre = await prisma.theatre.findUnique({
     where: {
@@ -18,6 +22,7 @@ router.get('/:id', async (req, res, next) => {
   res.send({ data: theatre })
 })
 
+// Create theatre
 router.post('/', async (req, res, next) => {
   const newTheatre = await prisma.theatre.create({ // INSERT
     data: req.body
@@ -26,6 +31,7 @@ router.post('/', async (req, res, next) => {
   res.status(201).json(newTheatre)
 })
 
+// Update data of specific theatre
 router.patch('/:id', async (req, res, next) => {
   const updateTheatre = await prisma.theatre.update({
     where: {
@@ -37,6 +43,7 @@ router.patch('/:id', async (req, res, next) => {
   res.status(200).json(updateTheatre)
 })
 
+// Delete theatre
 router.delete('/:id', async (req, res, next) => {
   const deleteTheatre = await prisma.theatre.delete({
     where: {
