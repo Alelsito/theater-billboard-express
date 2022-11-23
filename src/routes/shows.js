@@ -54,4 +54,77 @@ router.delete('/:id', async (req, res, next) => {
   res.status(200).json(deleteShow)
 })
 
+// PLAY_SHOW ----------------
+
+function exclude (actor, ...keys) {
+  for (const key of keys) {
+    delete actor[key]
+  }
+  return actor
+}
+
+// Get all shows of specific play
+router.get('/play/:id', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    },
+    select: {
+      id: true,
+      name: true,
+      show: {
+        include: {
+          theatre: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              country: true
+            }
+          }
+        }
+      }
+    }
+  })
+
+  play.show.forEach(s => { exclude(s, 'play_id', 'theatre_id') })
+
+  res.send({ data: { play } })
+})
+
+// Get specific show of specific play
+router.get('/:showId/play/:playId', async (req, res, next) => {
+  const play = await prisma.play.findUnique({
+    where: {
+      id: parseInt(req.params.playId)
+    },
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const show = await prisma.show.findUnique({
+    where: {
+      id: parseInt(req.params.showId)
+    },
+    include: {
+      theatre: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+          country: true
+        }
+      }
+    }
+  })
+
+  exclude(show, 'play_id', 'theatre_id')
+
+  play.show = show
+
+  res.send({ data: { play } })
+})
+
 module.exports = router
