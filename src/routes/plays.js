@@ -5,6 +5,12 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 // CRUD *************
+function exclude (actor, ...keys) {
+  for (const key of keys) {
+    delete actor[key]
+  }
+  return actor
+}
 
 // Get all plays
 router.get('/', async (req, res, next) => {
@@ -17,8 +23,52 @@ router.get('/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
+    },
+    include: {
+      play_poster: {
+        select: {
+          id: true,
+          url: true
+        }
+      },
+      play_genre: {
+        select: {
+          id: true,
+          genre: true
+        }
+      },
+      classification: true,
+      classification_detail: true,
+      play_director: {
+        select: {
+          id: true,
+          director: true
+        }
+      },
+      play_producer: {
+        select: {
+          id: true,
+          producer: true
+        }
+      },
+      play_script_writer: {
+        select: {
+          id: true,
+          script_writer: true
+        }
+      },
+      play_actor: {
+        select: {
+          id: true,
+          character_name: true,
+          actor: true
+        }
+      }
     }
   })
+
+  exclude(play, 'classification_id', 'classification_detail_id')
+
   res.send({ data: play })
 })
 
