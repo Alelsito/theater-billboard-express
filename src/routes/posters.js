@@ -62,8 +62,15 @@ router.get('/play/:id', async (req, res, next) => {
     where: {
       id: parseInt(req.params.id)
     },
-    include: {
-      play_poster: true
+    select: {
+      id: true,
+      name: true,
+      play_poster: {
+        select: {
+          id: true,
+          url: true
+        }
+      }
     }
   })
 
@@ -75,12 +82,20 @@ router.get('/:posterId/play/:playId', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.playId)
+    },
+    select: {
+      id: true,
+      name: true
     }
   })
 
   const poster = await prisma.play_poster.findUnique({
     where: {
       id: parseInt(req.params.posterId)
+    },
+    select: {
+      id: true,
+      url: true
     }
   })
 
