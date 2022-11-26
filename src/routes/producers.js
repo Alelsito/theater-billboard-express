@@ -61,36 +61,45 @@ router.get('/play/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
-    }
-  })
-
-  const producers = await prisma.play_producer.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
     },
     select: {
-      producer: true
+      id: true,
+      name: true,
+      play_producer: {
+        select: {
+          producer: true
+        }
+      }
     }
   })
-
-  play.producers = producers
 
   res.send({ data: { play } })
 })
 
 // Get specific play_producer
 router.get('/:producerId/play/:playId', async (req, res, next) => {
-  const playProducer = await prisma.play_producer.findFirst({
+  const play = await prisma.play.findUnique({
     where: {
-      play_id: parseInt(req.params.playId),
-      producer_id: parseInt(req.params.producerId)
+      id: parseInt(req.params.playId)
     },
-    include: {
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const playProducer = await prisma.play_producer.findUnique({
+    where: {
+      id: parseInt(req.params.producerId)
+    },
+    select: {
       producer: true
     }
   })
 
-  res.send({ data: { playProducer } })
+  play.play_producer = playProducer
+
+  res.send({ data: { play } })
 })
 
 // Insert into play_producer
