@@ -57,52 +57,53 @@ router.delete('/:id', async (req, res, next) => {
 // PLAY_ACTOR ----------------
 
 // Get all actors of specific play
-function exclude (actor, ...keys) {
-  for (const key of keys) {
-    delete actor[key]
-  }
-  return actor
-}
-
 router.get('/play/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
-    }
-  })
-
-  const actors = await prisma.play_actor.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
     },
-    include: {
-      actor: true
+    select: {
+      id: true,
+      name: true,
+      play_actor: {
+        select: {
+          id: true,
+          character_name: true,
+          actor: true
+        }
+      }
     }
   })
-
-  const actorsDataClean = actors.map(a => {
-    exclude(a, 'id', 'play_id', 'actor_id')
-    return a
-  })
-
-  play.actors = actorsDataClean
 
   res.send({ data: { play } })
 })
 
 // Get specific play_actor
 router.get('/:actorId/play/:playId', async (req, res, next) => {
-  const playActor = await prisma.play_actor.findFirst({
+  const play = await prisma.play.findUnique({
     where: {
-      play_id: parseInt(req.params.playId),
-      actor_id: parseInt(req.params.actorId)
+      id: parseInt(req.params.playId)
     },
-    include: {
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const playActor = await prisma.play_actor.findUnique({
+    where: {
+      id: parseInt(req.params.actorId)
+    },
+    select: {
+      id: true,
+      character_name: true,
       actor: true
     }
   })
 
-  res.send({ data: { playActor } })
+  play.actors = playActor
+
+  res.send({ data: { play } })
 })
 
 // Insert into play_actor
