@@ -61,36 +61,45 @@ router.get('/play/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
-    }
-  })
-
-  const directors = await prisma.play_director.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
     },
     select: {
-      director: true
+      id: true,
+      name: true,
+      play_director: {
+        select: {
+          director: true
+        }
+      }
     }
   })
-
-  play.directors = directors
 
   res.send({ data: { play } })
 })
 
 // Get specific play_director
 router.get('/:directorId/play/:playId', async (req, res, next) => {
-  const playDirector = await prisma.play_director.findFirst({
+  const play = await prisma.play.findUnique({
     where: {
-      play_id: parseInt(req.params.playId),
-      director_id: parseInt(req.params.directorId)
+      id: parseInt(req.params.playId)
     },
-    include: {
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const director = await prisma.play_director.findUnique({
+    where: {
+      id: parseInt(req.params.directorId)
+    },
+    select: {
       director: true
     }
   })
 
-  res.send({ data: { playDirector } })
+  play.play_director = director
+
+  res.send({ data: { play } })
 })
 
 // Insert into play_director
