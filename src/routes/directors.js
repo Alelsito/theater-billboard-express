@@ -88,7 +88,7 @@ router.get('/:directorId/play/:playId', async (req, res, next) => {
     }
   })
 
-  const director = await prisma.play_director.findUnique({
+  const playDirector = await prisma.play_director.findUnique({
     where: {
       id: parseInt(req.params.directorId)
     },
@@ -97,7 +97,7 @@ router.get('/:directorId/play/:playId', async (req, res, next) => {
     }
   })
 
-  play.play_director = director
+  play.play_director = playDirector
 
   res.send({ data: { play } })
 })

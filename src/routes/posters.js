@@ -89,7 +89,7 @@ router.get('/:posterId/play/:playId', async (req, res, next) => {
     }
   })
 
-  const poster = await prisma.play_poster.findUnique({
+  const playPoster = await prisma.play_poster.findUnique({
     where: {
       id: parseInt(req.params.posterId)
     },
@@ -99,7 +99,7 @@ router.get('/:posterId/play/:playId', async (req, res, next) => {
     }
   })
 
-  play.poster = poster
+  play.poster = playPoster
 
   res.send({ data: { play } })
 })

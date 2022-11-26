@@ -61,36 +61,45 @@ router.get('/play/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
-    }
-  })
-
-  const genres = await prisma.play_genre.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
     },
     select: {
-      genre: true
+      id: true,
+      name: true,
+      play_genre: {
+        select: {
+          genre: true
+        }
+      }
     }
   })
-
-  play.genres = genres
 
   res.send({ data: { play } })
 })
 
 // Get specific play_genre
 router.get('/:genreId/play/:playId', async (req, res, next) => {
-  const playGenre = await prisma.play_genre.findFirst({
+  const play = await prisma.play.findUnique({
     where: {
-      play_id: parseInt(req.params.playId),
-      genre_id: parseInt(req.params.genreId)
+      id: parseInt(req.params.playId)
     },
-    include: {
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const playGenre = await prisma.play_genre.findUnique({
+    where: {
+      id: parseInt(req.params.genreId)
+    },
+    select: {
       genre: true
     }
   })
 
-  res.send({ data: { playGenre } })
+  play.play_genre = playGenre
+
+  res.send({ data: { play } })
 })
 
 // Insert into play_genre
