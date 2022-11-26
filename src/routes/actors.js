@@ -101,7 +101,7 @@ router.get('/:actorId/play/:playId', async (req, res, next) => {
     }
   })
 
-  play.actors = playActor
+  play.play_actor = playActor
 
   res.send({ data: { play } })
 })

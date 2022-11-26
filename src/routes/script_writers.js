@@ -97,7 +97,7 @@ router.get('/:scriptwriterId/play/:playId', async (req, res, next) => {
     }
   })
 
-  play.script_writer = playScriptWriter
+  play.play_script_writer = playScriptWriter
 
   res.send({ data: { play } })
 })
