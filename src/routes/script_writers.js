@@ -61,36 +61,45 @@ router.get('/play/:id', async (req, res, next) => {
   const play = await prisma.play.findUnique({
     where: {
       id: parseInt(req.params.id)
-    }
-  })
-
-  const scriptWriters = await prisma.play_script_writer.findMany({
-    where: {
-      play_id: parseInt(req.params.id)
     },
     select: {
-      script_writer: true
+      id: true,
+      name: true,
+      play_script_writer: {
+        select: {
+          script_writer: true
+        }
+      }
     }
   })
-
-  play.scriptWriters = scriptWriters
 
   res.send({ data: { play } })
 })
 
 // Get specific play_script_writer
 router.get('/:scriptwriterId/play/:playId', async (req, res, next) => {
-  const playScriptWriter = await prisma.play_script_writer.findFirst({
+  const play = await prisma.play.findUnique({
     where: {
-      play_id: parseInt(req.params.playId),
-      script_writer_id: parseInt(req.params.scriptwriterId)
+      id: parseInt(req.params.playId)
     },
-    include: {
+    select: {
+      id: true,
+      name: true
+    }
+  })
+
+  const playScriptWriter = await prisma.play_script_writer.findUnique({
+    where: {
+      id: parseInt(req.params.scriptwriterId)
+    },
+    select: {
       script_writer: true
     }
   })
 
-  res.send({ data: { playScriptWriter } })
+  play.script_writer = playScriptWriter
+
+  res.send({ data: { play } })
 })
 
 // Insert into play_script_writer
